@@ -1,16 +1,16 @@
 package com.resolvix.lib.esb.api.exception;
 
-import com.resolvix.lib.esb.api.event.Category;
-import com.resolvix.lib.esb.api.event.error.Handle;
-import com.resolvix.lib.esb.api.event.error.ValidationError;
+import com.resolvix.lib.esb.api.event.EsbEventCategory;
+import com.resolvix.lib.esb.api.event.error.EsbErrorHandle;
+import com.resolvix.lib.esb.api.event.error.EsbError;
 
 public class EsbIllegalArgumentException
     extends IllegalArgumentException
-    implements ValidationError
+    implements EsbError
 {
     private static final String EMPTY_STRING = new String();
 
-    private Handle handle;
+    private EsbErrorHandle handle;
 
     private String elementPath;
 
@@ -37,25 +37,30 @@ public class EsbIllegalArgumentException
     }
 
     public EsbIllegalArgumentException(
-        Handle handle, String elementPath, Object[] permittedValues) {
+        EsbErrorHandle handle, String elementPath, Object[] permittedValues) {
         super(handle.getMessage(elementPath, toString(permittedValues)));
         this.handle = handle;
         this.elementPath = elementPath;
         this.permittedValues = permittedValues;
     }
 
-    public EsbIllegalArgumentException(Handle handle) {
+    public EsbIllegalArgumentException(EsbErrorHandle handle) {
         this(handle, null, null);
     }
 
     @Override
-    public Category getCategory() {
+    public EsbEventCategory getCategory() {
         return handle.getCategory();
     }
 
     @Override
     public String getCode() {
         return handle.getCode();
+    }
+
+    @Override
+    public EsbErrorHandle getHandle() {
+        return handle;
     }
 
     public String getElementPath() {

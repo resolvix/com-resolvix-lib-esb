@@ -1,7 +1,7 @@
 package com.resolvix.lib.esb.api.exception;
 
-import com.resolvix.lib.esb.api.event.Category;
-import com.resolvix.lib.esb.api.event.error.Handle;
+import com.resolvix.lib.esb.api.event.EsbEventCategory;
+import com.resolvix.lib.esb.api.event.error.EsbErrorHandle;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -20,15 +20,15 @@ public class EsbIllegalArgumentExceptionUT {
     public ExpectedException expectedException = ExpectedException.none();
 
     private enum LocalError
-        implements Handle
+        implements EsbErrorHandle
     {
-        ERROR001(Category.ERROR, "ERROR001"),
-        WARNING002(Category.WARNING, "WARNING002"),
-        WARNING003(Category.WARNING, "WARNING003"),
-        WARNING004(Category.WARNING, "WARNING004"),
-        INFO005(Category.INFO, "INFO005");
+        ERROR001(EsbEventCategory.ERROR, "ERROR001"),
+        WARNING002(EsbEventCategory.WARNING, "WARNING002"),
+        WARNING003(EsbEventCategory.WARNING, "WARNING003"),
+        WARNING004(EsbEventCategory.WARNING, "WARNING004"),
+        INFO005(EsbEventCategory.INFO, "INFO005");
 
-        private Category category;
+        private EsbEventCategory category;
 
         private String code;
 
@@ -40,13 +40,13 @@ public class EsbIllegalArgumentExceptionUT {
                 localError.pattern = resourceBundle.getString(localError.code);
         }
 
-        LocalError(Category category, String code) {
+        LocalError(EsbEventCategory category, String code) {
             this.category = category;
             this.code = code;
         }
 
         @Override
-        public Category getCategory() {
+        public EsbEventCategory getCategory() {
             return category;
         }
 
@@ -73,7 +73,7 @@ public class EsbIllegalArgumentExceptionUT {
             = new EsbIllegalArgumentException(LocalError.ERROR001, "dataElement", new String[] { "permittedValue1", "permittedValue2" });
         assertThat(
             exception, allOf(
-                hasProperty("category", equalTo(Category.ERROR)),
+                hasProperty("category", equalTo(EsbEventCategory.ERROR)),
                 hasProperty("code", equalTo("ERROR001")),
                 hasProperty("elementPath", equalTo("dataElement")),
                 hasProperty("permittedValues", arrayContaining("permittedValue1", "permittedValue2")),
@@ -88,7 +88,7 @@ public class EsbIllegalArgumentExceptionUT {
             = new EsbIllegalArgumentException(LocalError.INFO005);
         assertThat(
             exception, allOf(
-                hasProperty("category", equalTo(Category.INFO)),
+                hasProperty("category", equalTo(EsbEventCategory.INFO)),
                 hasProperty("code", equalTo("INFO005")),
                 hasProperty("elementPath", nullValue()),
                 hasProperty("permittedValues", nullValue()),
